@@ -1,0 +1,14 @@
+# HSTS 1.0 Known Hosts database for GNU Wget.
+# Edit at your own risk.
+# <hostname>	<port>	<incl. subdomains>	<created>	<max-age>
+gitlab.com	0	0	1702455441	31536000
+projectlombok.org	0	0	1700183893	63072000
+corretto.aws	0	1	1700183826	63072000
+ftp.postgresql.org	0	0	1702453823	31536000
+codeload.github.com	0	0	1689557177	31536000
+portswigger.net	0	0	1702453628	31536000
+binaries.sonarsource.com	0	1	1700183843	63072000
+www.clamav.net	0	0	1700183869	15552000
+packages.gitlab.com	0	0	1702455339	31536000
+github.com	0	1	1703033909	31536000
+nodejs.org	0	1	1702453854	31536000

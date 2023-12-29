@@ -1,0 +1,153 @@
+sonarqube
+=========
+(Look under Long term support)
+https://www.sonarqube.org/downloads/
+
+(Look for the sonarqube supported Node.js version linux-x64.tar.gz)
+https://nodejs.org/en/download/releases/
+
+(sonarqube cli)
+https://docs.sonarqube.org/<version>/analysis/scan/sonarscanner/ 
+https://docs.sonarqube.org/latest/analyzing-source-code/scanners/sonarscanner/
+or
+https://github.com/SonarSource/sonar-scanner-cli/releases
+https://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli
+
+dependency checker
+===================
+https://github.com/jeremylong/DependencyCheck
+
+https://raw.githubusercontent.com/RetireJS/retire.js/master/repository/jsrepository.json
+or
+https://github.com/RetireJS/retire.js/blob/master/repository/jsrepository.json
+
+https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json
+https://jeremylong.github.io/DependencyCheck/suppressions/publishedSuppressions.xml
+
+clamav
+======
+https://www.clamav.net/
+(See if additional patches are required for RHEL)
+https://docs.clamav.net/manual/Installing/Installing-from-source-Unix.html
+
+https://www.clamav.net/downloads
+https://github.com/json-c/json-c/tags
+
+(Base of cvdupdate source code the following are currently required for clamav database, see https://github.com/Cisco-Talos/cvdupdate
+ for more information)
+https://database.clamav.net/main.cvd
+https://database.clamav.net/daily.cvd
+https://database.clamav.net/bytecode.cvd
+
+grype
+=====
+(Look for the one with suffix amd64.tar.gz)
+https://github.com/anchore/grype/releases
+
+https://toolbox-data.anchore.io/grype/databases/listing.json
+
+trivy
+=====
+(Look for the one with suffix linux 64bit.tar.gz)
+https://github.com/aquasecurity/trivy/releases
+
+(Download using oras)
+https://github.com/aquasecurity/trivy-db/releases
+
+https://aquasecurity.github.io/trivy/v0.37/docs/advanced/air-gap/
+
+oras pull -a ghcr.io/aquasecurity/trivy-db:2
+oras pull ghcr.io/aquasecurity/trivy-java-db:1
+
+openscap
+========
+(Download the zip)
+https://github.com/ComplianceAsCode/content/releases
+
+(Look for the corresponding RHEL version)
+https://access.redhat.com/security/data/oval/
+https://access.redhat.com/security/data/oval/com.redhat.rhsa-RHEL8.xml.bz2
+
+gitlab runner
+=============
+(Check gitlab-runner version)
+https://gitlab.com/gitlab-org/charts/gitlab-runner
+or
+https://gitlab.com/gitlab-org/gitlab-runner/-/releases
+
+(Download image using crane)
+crane pull registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v<version> gitlab-runner-helper_x86_64-v<version>.tar
+crane pull registry.gitlab.com/gitlab-org/gitlab-runner:alpine-v<version> gitlab-runner_alpine-v<version>.tar
+
+(Download gitlab-runner, gitlab-runner-helper, tini)
+https://gitlab-runner-downloads.s3.amazonaws.com/ubi-images/<version>/index.html
+
+(hardening)
+https://repo1.dso.mil/dsop/gitlab/gitlab-runner/gitlab-runner
+https://repo1.dso.mil/dsop/gitlab/gitlab-runner/gitlab-runner-helper
+
+git-lfs
+--------
+to see GIT_LFS_VERSION
+https://gitlab.com/gitlab-org/ci-cd/gitlab-runner-ubi-images/-/blob/master/scripts/build.sh
+or
+check ubi repo
+https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os
+https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/g/
+
+
+aws
+===
+(Check latest version)
+https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst?plain=1
+(look for v2 not v1 e.g. 2.x.x)
+https://github.com/aws/aws-cli/tags
+
+(download)
+https://awscli.amazonaws.com/awscli-exe-linux-x86_64-<version>.zip
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-<version>.zip" -o "awscliv2_<version>.zip"
+
+fortify
+=======
+installer and rules get from DSTA PMT
+
+Parasoft
+========
+check parasoft website
+
+check for supported lombok and download from:
+https://projectlombok.org/all-versions
+
+ubi
+====
+(search for ubi8 and ubi8-minimal)
+https://catalog.redhat.com/software/containers/search
+
+(For hardening)
+https://repo1.dso.mil/dsop/redhat/ubi
+
+cosign
+======
+(Donwload linux-amd64)
+https://github.com/sigstore/cosign
+
+hadolint
+=========
+https://github.com/hadolint/hadolint/releases/
+
+corretto
+========
+(Download java-<version>-amazon-corretto-devel-<version>.x86_64.rpm or amazon-corretto-<version>-linux-x64.tar.gz)
+https://github.com/corretto/corretto-11/releases
+https://github.com/corretto/corretto-17/releases
+
+(Download signature for rpm files)
+https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/downloads-list.html#signature
+https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html#signature
+
+
+nodejs
+======
+(Look for the sonarqube supported Node.js version linux-x64.tar.gz)
+(search for "node.js 14" and "node.js 18")
+https://nodejs.org/en/download/releases/

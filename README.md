@@ -27,3 +27,6 @@ Files will be downloaded and stored in `.\latest` folder.
 1. Open up command prompt and run `.\db.cmd`
 
 Files will be downloaded and zipped in `.\db.zip`
+
+### What's Next
+- Upload to s3 bucket (Refer to notion)

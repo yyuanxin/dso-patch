@@ -42,7 +42,7 @@
     __________________________________________________________________________
 
 .NOTES
-	Last updated on 11 October 2023
+	Last updated on 13 May 2024
 #>
 
 ################### VERSIONS ###################
@@ -50,25 +50,28 @@
 ################################################
 ################ For DSO tools ################# 
 # $BURP_VERSION="2023.11.1"
-# $GITLAB_VERSION="16.5.3"
-# $GITLAB_RUNNER_VERSION="16.6.1"
-# $GITLAB_CHART_VERSION="0.59.2"
+$GITLAB_VERSIONS=@("16.9.5", "16.10.3")
+$GITLAB_RUNNER_VERSION="16.10.0"
+$GITLAB_CHART_VERSION="0.62.0"
 ################ For Mgt-client ################
-# $PGADMIN_VERSION="8.0" 
+# $PGADMIN_VERSION="8.4" 
 # $OPENSSL_VERSION="1.1.1w"
-# $KUBECTL_VERSION="1.26.1"
+# $KUBECTL_VERSION="1.29.2"
 # $IAM_AUTHENTICATOR_VERSION="0.6.14"
-# $HELM_VERSION="3.13.2" 
-# $MYSQLWORKBENCH_VERSION="8.0.34"
+# $HELM_VERSION="3.14.3" 
+# $MYSQLWORKBENCH_VERSION="8.0.36"
 ############### For Runner Images ###############
-# $UBI8_VERSION="8.9-1028"
-# $UBI8_MINIMAL_VERSION="8.9-1029"
-# $AWS_CLI_VERSION="2.15.0" 
-# $PYTHON_39_VERSION="3.9.18"
-# $PYTHON_310_VERSION="3.10.13"
-# $CORRETO_11_VERSION="11.0.21.9.1"
-# $CORRETO_17_VERSION="17.0.9.8.1"
-$DEPENDENCY_CHECK_VERSION="9.0.7"
+# $UBI8_VERSION="8.9-1136"
+# $UBI8_MINIMAL_VERSION="8.9-1137"
+# $UBI9_VERSION="9.3-1476"
+# $UBI9_MINIMAL_VERSION="9.3-1475"
+# $UBI9_MICRO_VERSION="9.3-9"
+# $AWS_CLI_VERSION="2.15.30" 
+# $PYTHON_39_VERSION="3.9.19"
+# $PYTHON_310_VERSION="3.10.14"
+# $CORRETO_11_VERSION="11.0.22.7.1"
+# $CORRETO_17_VERSION="17.0.10.7.1"
+# $DEPENDENCY_CHECK_VERSION="9.0.10"
 # $MAVEN_VERSION="3.9.6"
 # $NODE_18_VERSION="18.18.2"
 # $NODE_20_VERSION="20.10.0"
@@ -76,8 +79,8 @@ $DEPENDENCY_CHECK_VERSION="9.0.7"
 # $SONAR_SCANNER_CLI_VERSION="5.0.1.3006"
 # $OPENSCAP_VERSION="0.1.71"
 # $CLAMAV_VERSION="1.2.1"
-# $GRYPE_VERSION="0.73.4"
-# $TRIVY_VERSION="0.48.0"
+# $GRYPE_VERSION="0.74.7"
+# $TRIVY_VERSION="0.50.0"
 # $COSIGN_VERSION="2.0.2"
 # $HADOLINT_VERSION="2.12.0"
 # $NODE_14_VERSION="14.21.3"
@@ -89,6 +92,7 @@ $DEPENDENCY_CHECK_VERSION="9.0.7"
 $WGET=".\tools\wget\wget.exe"
 $CRANE=".\tools\crane\crane.exe"
 $DOWNLOAD_DIR=".\latest"
+$DOWNLOAD_ZIP=".\latest.zip"
 $HASH_TXTFILE="sha256.txt"
 function downloadFile {
     param(
@@ -141,6 +145,7 @@ function craneFile {
 
 function wipeLatest {
     Remove-Item $DOWNLOAD_DIR\* -Recurse -Force
+    Remove-Item $DOWNLOAD_ZIP -Force
 }
 
 function hashFile {
@@ -163,6 +168,10 @@ function hashFile {
         Write-Host "Failed to calculate hash for file: $FilePath"
         return $null
     }
+}
+
+function zipFolder {
+    Compress-Archive -Path $DOWNLOAD_DIR -DestinationPath $DOWNLOAD_ZIP
 }
 
 function writeTextFile {
@@ -201,8 +210,16 @@ function DSO_TOOLS {param()
     }
 
     ## Gitlab
-    if ($global:GITLAB_VERSION -eq $null -and ![string]::IsNullOrEmpty($GITLAB_VERSION)) {
-        $GITLAB_EE_LINK="https://packages.gitlab.com/gitlab/gitlab-ee/packages/el/8/gitlab-ee-${GITLAB_VERSION}-ee.0.el8.x86_64.rpm/download.rpm"
+    if ($global:GITLAB_VERSIONS -eq $null -and $GITLAB_VERSIONS -is [array] -and $GITLAB_VERSIONS.Length -gt 0) {
+        foreach ($version in $GITLAB_VERSIONS) {
+            $GITLAB_EE_LINK="https://packages.gitlab.com/gitlab/gitlab-ee/packages/el/8/gitlab-ee-${version}-ee.0.el8.x86_64.rpm/download.rpm"
+            downloadFile "Gitlab EE" $version $GITLAB_EE_LINK
+        }    
+    } else {
+        Write-Output "Skipping Gitlab"
+    }
+
+    if ($global:GITLAB_RUNNER_VERSION -eq $null -and ![string]::IsNullOrEmpty($GITLAB_RUNNER_VERSION)) {
         $GITLAB_CHART_LINK="https://gitlab.com/gitlab-org/charts/gitlab-runner/-/archive/v${GITLAB_CHART_VERSION}/gitlab-runner-v${GITLAB_CHART_VERSION}.tar.gz"
         $GITLAB_RUNNER_ALPINE_LINK="registry.gitlab.com/gitlab-org/gitlab-runner:alpine-v$GITLAB_RUNNER_VERSION"
         $GITLAB_RUNNER_HELPER_LINK="registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v$GITLAB_RUNNER_VERSION"
@@ -210,15 +227,14 @@ function DSO_TOOLS {param()
         $GITLAB_RUNNER_HELPER_UBI_LINK="https://gitlab-runner-downloads.s3.amazonaws.com/ubi-images/v$GITLAB_RUNNER_VERSION/gitlab-runner-helper"
         $GITLAB_TINI_UBI_LINK="https://gitlab-runner-downloads.s3.amazonaws.com/ubi-images/v$GITLAB_RUNNER_VERSION/tini"
 
-        downloadFile "Gitlab EE" $GITLAB_VERSION $GITLAB_EE_LINK
         downloadFile "Gitlab EE Chart" $GITLAB_CHART_VERSION $GITLAB_CHART_LINK
         downloadFile "Gitlab Runner - Ubi Image" $GITLAB_RUNNER_VERSION $GITLAB_RUNNER_UBI_LINK
-        downloadFile "Gitlab Runner Helper - Ubi Image" $GITLAB_RUNNER_VERSION $GITLAB_RUNNER_UBI_LINK
+        downloadFile "Gitlab Runner Helper - Ubi Image" $GITLAB_RUNNER_VERSION $GITLAB_RUNNER_HELPER_UBI_LINK
         downloadFile "Gitlab Tini - Ubi Image" $GITLAB_RUNNER_VERSION $GITLAB_TINI_UBI_LINK
         craneFile "Gitlab Runner Alpine" $GITLAB_RUNNER_VERSION $GITLAB_RUNNER_ALPINE_LINK "gitlab-runner_alpine-v$GITLAB_RUNNER_VERSION.tar"
         craneFile "Gitlab Runner Helper" $GITLAB_RUNNER_VERSION $GITLAB_RUNNER_HELPER_LINK "gitlab-runner-helper_x86_64-v$GITLAB_RUNNER_VERSION.tar"
     } else {
-        Write-Output "Skipping Gitlab"
+        Write-Output "Skipping Gitlab Runner"
     }
 
 }
@@ -300,6 +316,33 @@ function RUNNER_IMAGES {param()
         craneFile "Ubi8 Minimal" $UBI8_MINIMAL_VERSION $UBI8_MINIMAL_LINK "ubi8-minimal_$UBI8_MINIMAL_VERSION.tar"
     } else {
         Write-Output "Skipping Ubi8 Minimal"
+    }
+
+    ## UBI9
+    if ($global:UBI9_VERSION -eq $null -and ![string]::IsNullOrEmpty($UBI9_VERSION)) {
+        $UBI9_LINK="registry.access.redhat.com/ubi9/ubi:${UBI9_VERSION}"
+
+        craneFile "UBI9" $UBI9_VERSION $UBI9_LINK "ubi9_$UBI9_VERSION.tar"
+    } else {
+        Write-Output "Skipping Ubi9"
+    }
+
+    ## UBI9 MINIMAL
+    if ($global:UBI9_MINIMAL_VERSION -eq $null -and ![string]::IsNullOrEmpty($UBI9_MINIMAL_VERSION)) {
+        $UBI9_MINIMAL_LINK="registry.access.redhat.com/ubi9/ubi-minimal:${UBI9_MINIMAL_VERSION}"
+
+        craneFile "Ubi9 Minimal" $UBI9_MINIMAL_VERSION $UBI9_MINIMAL_LINK "ubi9-minimal_$UBI9_MINIMAL_VERSION.tar"
+    } else {
+        Write-Output "Skipping Ubi9 Minimal"
+    }
+
+    ## UBI9 MICRO
+    if ($global:UBI9_MICRO_VERSION -eq $null -and ![string]::IsNullOrEmpty($UBI9_MICRO_VERSION)) {
+        $UBI9_MICRO_LINK="registry.access.redhat.com/ubi9/ubi-micro:${UBI9_MICRO_VERSION}"
+
+        craneFile "Ubi9 Micro" $UBI9_MICRO_VERSION $UBI9_MICRO_LINK "ubi9-micro_$UBI9_MICRO_VERSION.tar"
+    } else {
+        Write-Output "Skipping Ubi9 Micro"
     }
 
     ## AWS CLI
@@ -521,3 +564,5 @@ MGT_CLIENT_TOOLS
 RUNNER_IMAGES
 # Generate sha256 file
 HASHER
+# Zip .\latest to .\latest.zip
+zipFolder

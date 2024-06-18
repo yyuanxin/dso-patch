@@ -20,5 +20,8 @@ call scripts\clamav.cmd
 SET OPENSCAP_DIR=%~dp0db\openscap
 mkdir %OPENSCAP_DIR%
 call scripts\openscap.cmd
+SET SEMGREP_DIR=%~dp0db\semgrep
+mkdir %SEMGREP_DIR%
+call scripts\semgrep.cmd
 
 powershell -Command "Compress-Archive -Path '%~dp0db' -DestinationPath 'db.zip'"

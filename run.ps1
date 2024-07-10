@@ -47,7 +47,7 @@
     OPENSHIFT INSTALL   | openshift-install-linux-<VERSION>.tar.gz
     OPENSHIFT CLIENT    | openshift-client-linux-<VERSION>.tar.gz
     CCOCTL              | ccoctl-linux-<VERSION>.tar.gz
-    ROXCTL              | roxctl
+    ROXCTL              | roxctl-<VERSION>
     GO                  | go<VERSION>.linux-amd64.tar.gz
     KUBERNETES CORE     | kubernetes-core-<VERSION>.tar.gz
     ROCKETCHAT          | rocketchat_<VERSION>.tar
@@ -578,7 +578,7 @@ function RUNNER_IMAGES {param()
     }
 
     ## Terraform 1.7
-    if ($global:$TERRAFORM_17_VERSION -eq $null -and ![string]::IsNullOrEmpty($TERRAFORM_17_VERSION)) {
+    if ($global:TERRAFORM_17_VERSION -eq $null -and ![string]::IsNullOrEmpty($TERRAFORM_17_VERSION)) {
         $TERRAFORM_17_LINK="https://releases.hashicorp.com/terraform/${TERRAFORM_17_VERSION}/terraform_${TERRAFORM_17_VERSION}_linux_amd64.zip"
 
         downloadFile "Terraform 1.7" $TERRAFORM_17_VERSION $TERRAFORM_17_LINK
@@ -587,17 +587,17 @@ function RUNNER_IMAGES {param()
     }
 
     ## Terraform Provider AWS
-    if ($global:$TERRAFORM_PROVIDER_AWS_VERSION -eq $null -and ![string]::IsNullOrEmpty($TERRAFORM_PROVIDER_AWS_VERSION)) {
+    if ($global:TERRAFORM_PROVIDER_AWS_VERSION -eq $null -and ![string]::IsNullOrEmpty($TERRAFORM_PROVIDER_AWS_VERSION)) {
         $TERRAFORM_PROVIDER_AWS_LINK="https://github.com/hashicorp/terraform-provider-aws/archive/refs/tags/v${TERRAFORM_PROVIDER_AWS_VERSION}.zip"
 
-        # downloadFile "Terraform Provider AWS" $TERRAFORM_PROVIDER_AWS_VERSION $TERRAFORM_PROVIDER_AWS_LINK
-        downloadAndRenameFile "Terraform Provider AWS" $TERRAFORM_PROVIDER_AWS_VERSION $TERRAFORM_PROVIDER_AWS_LINK "terraform-provider-aws_${TERRAFORM_PROVIDER_AWS_VERSION}_linux_amd64.zip"
+        downloadFile "Terraform Provider AWS" $TERRAFORM_PROVIDER_AWS_VERSION $TERRAFORM_PROVIDER_AWS_LINK
+        # downloadAndRenameFile "Terraform Provider AWS" $TERRAFORM_PROVIDER_AWS_VERSION $TERRAFORM_PROVIDER_AWS_LINK "terraform-provider-aws_${TERRAFORM_PROVIDER_AWS_VERSION}_linux_amd64.zip"
     } else {
         Write-Output "Skipping Terraform Provider AWS"
     }
 
     ## Openshift Install
-    if ($global:$OPENSHIFT_INSTALL_VERSION -eq $null -and ![string]::IsNullOrEmpty($OPENSHIFT_INSTALL_VERSION)) {
+    if ($global:OPENSHIFT_INSTALL_VERSION -eq $null -and ![string]::IsNullOrEmpty($OPENSHIFT_INSTALL_VERSION)) {
         $OPENSHIFT_INSTALL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux-${OPENSHIFT_INSTALL_VERSION}.tar.gz"
 
         downloadFile "Openshift Installer" $OPENSHIFT_INSTALL_VERSION $OPENSHIFT_INSTALL_LINK
@@ -606,7 +606,7 @@ function RUNNER_IMAGES {param()
     }
 
     ## Openshift Client
-    if ($global:$OPENSHIFT_CLIENT_VERSION -eq $null -and ![string]::IsNullOrEmpty($OPENSHIFT_CLIENT_VERSION)) {
+    if ($global:OPENSHIFT_CLIENT_VERSION -eq $null -and ![string]::IsNullOrEmpty($OPENSHIFT_CLIENT_VERSION)) {
         $OPENSHIFT_CLIENT_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux-${OPENSHIFT_CLIENT_VERSION}.tar.gz"
 
         downloadFile "Openshift Client" $OPENSHIFT_CLIENT_VERSION $OPENSHIFT_CLIENT_LINK
@@ -615,8 +615,8 @@ function RUNNER_IMAGES {param()
     }
     
     ## Cloud Credential Operator
-    if ($global:$CCOCTL_VERSION -eq $null -and ![string]::IsNullOrEmpty($CCOCTL_VERSION)) {
-        $CCOCTL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/ccoctl-linux-${CCOCTL_LINK}.tar.gz"
+    if ($global:CCOCTL_VERSION -eq $null -and ![string]::IsNullOrEmpty($CCOCTL_VERSION)) {
+        $CCOCTL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/ccoctl-linux-${CCOCTL_VERSION}.tar.gz"
 
         downloadFile "Cloud Credential Operator (CCOCTL)" $CCOCTL_VERSION $CCOCTL_LINK
     } else {
@@ -624,16 +624,17 @@ function RUNNER_IMAGES {param()
     }
 
     ## Roxctl
-    if ($global:$ROXCTL_VERSION -eq $null -and ![string]::IsNullOrEmpty($ROXCTL_VERSION)) {
+    if ($global:ROXCTL_VERSION -eq $null -and ![string]::IsNullOrEmpty($ROXCTL_VERSION)) {
         $ROXCTL_LINK="https://mirror.openshift.com/pub/rhacs/assets/${ROXCTL_VERSION}/bin/Linux/roxctl"
 
-        downloadFile "Roxctl" $ROXCTL_VERSION $ROXCTL_LINK
+        # downloadFile "Roxctl" $ROXCTL_VERSION $ROXCTL_LINK
+        downloadAndRenameFile "Roxctl" $ROXCTL_VERSION $ROXCTL_LINK "roxctl-${ROXCTL_VERSION}"
     } else {
         Write-Output "Skipping Roxctl"
     }
 
     ## Go
-    if ($global:$GO_VERSION -eq $null -and ![string]::IsNullOrEmpty($GO_VERSION)) {
+    if ($global:GO_VERSION -eq $null -and ![string]::IsNullOrEmpty($GO_VERSION)) {
         $GO_LINK="https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
 
         downloadFile "Go" $GO_VERSION $GO_LINK
@@ -642,7 +643,7 @@ function RUNNER_IMAGES {param()
     }
 
     ## Kubernetes Core
-    if ($global:$KUBERNETES_CORE_VERSION -eq $null -and ![string]::IsNullOrEmpty($KUBERNETES_CORE_VERSION)) {
+    if ($global:KUBERNETES_CORE_VERSION -eq $null -and ![string]::IsNullOrEmpty($KUBERNETES_CORE_VERSION)) {
         $KUBERNETES_CORE_LINK="https://galaxy.ansible.com/api/v3/plugin/ansible/content/published/collections/artifacts/kubernetes-core-${KUBERNETES_CORE_VERSION}.tar.gz"
 
         downloadFile "Kubernetes Core" $KUBERNETES_CORE_VERSION $KUBERNETES_CORE_LINK
@@ -659,17 +660,17 @@ function COLLAB_TOOLS {param()
     }
 
     ## Rocketchat
-    if ($global:$ROCKETCHAT_VERSION -eq $null -and ![string]::IsNullOrEmpty($ROCKETCHAT_VERSION)) {
+    if ($global:ROCKETCHAT_VERSION -eq $null -and ![string]::IsNullOrEmpty($ROCKETCHAT_VERSION)) {
         $ROCKETCHAT_LINK="rocketchat/rocket.chat:${ROCKETCHAT_VERSION}"
 
-        $VERSION=$ROCKETCHAT_VERSION -replace '_', '.'
+        $VERSION=$ROCKETCHAT_VERSION -replace '\.', '_'
         craneFile "Rocketchat" $ROCKETCHAT_VERSION $ROCKETCHAT_LINK "rocketchat_$VERSION.tar"
     } else {
         Write-Output "Skipping Rocketchat"
     }
     
     ## Mongosh
-    if ($global:$MONGOSH_VERSION -eq $null -and ![string]::IsNullOrEmpty($MONGOSH_VERSION)) {
+    if ($global:MONGOSH_VERSION -eq $null -and ![string]::IsNullOrEmpty($MONGOSH_VERSION)) {
         $MONGOSH_LINK="https://downloads.mongodb.com/compass/mongosh-${MONGOSH_VERSION}-linux-x64.tgz"
 
         downloadFile "Mongosh" $MONGOSH_VERSION $MONGOSH_LINK
@@ -678,7 +679,7 @@ function COLLAB_TOOLS {param()
     }
 
     ## MongoDB
-    if ($global:$MONGODB_VERSION -eq $null -and ![string]::IsNullOrEmpty($MONGODB_VERSION)) {
+    if ($global:MONGODB_VERSION -eq $null -and ![string]::IsNullOrEmpty($MONGODB_VERSION)) {
         $MONGODB_LINK="https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel80-${MONGODB_VERSION}.tgz"
 
         downloadFile "MongoDB" $MONGODB_VERSION $MONGODB_LINK
@@ -687,7 +688,7 @@ function COLLAB_TOOLS {param()
     }
 
     ## Jira
-    if ($global:$JIRA_VERSION -eq $null -and ![string]::IsNullOrEmpty($JIRA_VERSION)) {
+    if ($global:JIRA_VERSION -eq $null -and ![string]::IsNullOrEmpty($JIRA_VERSION)) {
         $JIRA_LINK="https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-${JIRA_VERSION}.tar.gz"
 
         downloadFile "Jira" $JIRA_VERSION $JIRA_LINK
@@ -696,7 +697,7 @@ function COLLAB_TOOLS {param()
     }
 
     ## Confluence
-    if ($global:$CONFLUENCE_VERSION -eq $null -and ![string]::IsNullOrEmpty($CONFLUENCE_VERSION)) {
+    if ($global:CONFLUENCE_VERSION -eq $null -and ![string]::IsNullOrEmpty($CONFLUENCE_VERSION)) {
         $CONFLUENCE_LINK="https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-${CONFLUENCE_VERSION}.tar.gz"
 
         downloadFile "Confluence" $CONFLUENCE_VERSION $CONFLUENCE_LINK

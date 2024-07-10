@@ -11,6 +11,7 @@
     Exclusions:
     - Fortify
     - Parasoft
+    - Checkmarx
     _________________________________________________________________________
     Tool                | Expected output
     ____________________|____________________________________________________
@@ -39,10 +40,25 @@
     TRIVY               | trivy_<VERSION>_Linux-64bit.tar.gz
     COSIGN              | cosign-linux-amd64
     HADOLINT            | hadolint-v<VERSION>.tar.gz
+    LOMBOK              | lombok-<VERSION>.jar
+    TFLINT              | tflint-<VERSION>-linux-amd64.zip
+    TERRAFORM 1.7       | terraform_<VERSION>_linux_amd64.zip
+    TERRAFORM AWS       | terraform-provider-aws_<VERSION>_linux_amd64.zip (?)
+    OPENSHIFT INSTALL   | openshift-install-linux-<VERSION>.tar.gz
+    OPENSHIFT CLIENT    | openshift-client-linux-<VERSION>.tar.gz
+    CCOCTL              | ccoctl-linux-<VERSION>.tar.gz
+    ROXCTL              | roxctl
+    GO                  | go<VERSION>.linux-amd64.tar.gz
+    KUBERNETES CORE     | kubernetes-core-<VERSION>.tar.gz
+    ROCKETCHAT          | rocketchat_<VERSION>.tar
+    MONGOSH             | mongosh-<VERSION>-linux-x64.tgz
+    MONGODB             | mongodb-linux-x86_64-rhel80-<VERSION>.tgz
+    JIRA                | atlassian-jira-software-<VERSION>.tar.gz
+    CONFLUENCE          | atlassian-confluence-software-<VERSION>.tar.gz
     __________________________________________________________________________
 
 .NOTES
-	Last updated on 13 May 2024
+	Last updated on 10 Jul 2024
 #>
 
 ################### VERSIONS ###################
@@ -50,9 +66,9 @@
 ################################################
 ################ For DSO tools ################# 
 # $BURP_VERSION="2023.11.1"
-$GITLAB_VERSIONS=@("16.9.5", "16.10.3")
-$GITLAB_RUNNER_VERSION="16.10.0"
-$GITLAB_CHART_VERSION="0.62.0"
+# $GITLAB_VERSIONS=@("16.9.5", "16.10.3")
+# $GITLAB_RUNNER_VERSION="16.10.0"
+# $GITLAB_CHART_VERSION="0.62.0"
 ################ For Mgt-client ################
 # $PGADMIN_VERSION="8.4" 
 # $OPENSSL_VERSION="1.1.1w"
@@ -86,6 +102,21 @@ $GITLAB_CHART_VERSION="0.62.0"
 # $NODE_14_VERSION="14.21.3"
 # $SONARQUBE_VERSION_8="8.9.10.61524"
 # $LOMBOK_VERSION="1.18.30"
+$TFLINT_VERSION="0.52.0"
+$TERRAFORM_17_VERSION="1.7.5"
+$TERRAFORM_PROVIDER_AWS_VERSION="5.57.0"
+$OPENSHIFT_INSTALL_VERSION="4.16.2"
+$OPENSHIFT_CLIENT_VERSION="4.16.2"
+$CCOCTL_VERSION="4.16.2"
+$ROXCTL_VERSION="4.4.4"
+$GO_VERSION="1.22.5"
+$KUBERNETES_CORE_VERSION="5.0.0"
+############### For Collab Tools ###############
+$ROCKETCHAT_VERSION="6.9.3"
+$MONGOSH_VERSION="2.2.11"
+$MONGODB_VERSION="6.0.16"
+$JIRA_VERSION="9.12.11"
+$CONFLUENCE_VERSION="8.5.12"
 ################################################
 # HELPER FUNCTIONS                             #
 ################################################
@@ -93,6 +124,8 @@ $WGET=".\tools\wget\wget.exe"
 $CRANE=".\tools\crane\crane.exe"
 $DOWNLOAD_DIR=".\latest"
 $DOWNLOAD_ZIP=".\latest.zip"
+$COLLAB_DOWNLOAD_DIR=".\latest\collab"
+$COLLAB_DOWNLOAD_ZIP=".\collab.zip"
 $HASH_TXTFILE="sha256.txt"
 function downloadFile {
     param(
@@ -144,6 +177,9 @@ function craneFile {
 }
 
 function wipeLatest {
+    if (-Not (Test-Path -Path $DOWNLOAD_DIR)) {
+        New-Item -ItemType Directory -Path $DOWNLOAD_DIR
+    }
     Remove-Item $DOWNLOAD_DIR\* -Recurse -Force
     Remove-Item $DOWNLOAD_ZIP -Force
 }
@@ -171,7 +207,13 @@ function hashFile {
 }
 
 function zipFolder {
-    Compress-Archive -Path $DOWNLOAD_DIR -DestinationPath $DOWNLOAD_ZIP
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$dir,
+        [Parameter(Mandatory = $true)]
+        [string]$zip
+    )
+    Compress-Archive -Path $dir -DestinationPath $zip
 }
 
 function writeTextFile {
@@ -456,7 +498,7 @@ function RUNNER_IMAGES {param()
 
     ## Sonar Scanner CLI
     if ($global:SONAR_SCANNER_CLI_VERSION -eq $null -and ![string]::IsNullOrEmpty($SONAR_SCANNER_CLI_VERSION)) {
-        $SONAR_SCANNER_CLI_LINK="https://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/${SONAR_SCANNER_CLI_VERSION}/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip"
+        $SONAR_SCANNER_CLI_LINK="https://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/${SONAR_SCANNER_CLI_VERSION}/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux-x64.zip"
         
         downloadFile "Sonar Scanner CLI" $SONAR_SCANNER_CLI_VERSION $SONAR_SCANNER_CLI_LINK
     } else {
@@ -526,6 +568,141 @@ function RUNNER_IMAGES {param()
         Write-Output "Skipping Lombok"
     }
 
+    ## Tflint
+    if ($global:TFLINT_VERSION -eq $null -and ![string]::IsNullOrEmpty($TFLINT_VERSION)) {
+        $TFLINT_LINK="https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip"
+
+        downloadAndRenameFile "Tflint" $TFLINT_VERSION $TFLINT_LINK "tflint-${TFLINT_VERSION}-linux-amd64.zip"
+    } else {
+        Write-Output "Skipping Tflint"
+    }
+
+    ## Terraform 1.7
+    if ($global:$TERRAFORM_17_VERSION -eq $null -and ![string]::IsNullOrEmpty($TERRAFORM_17_VERSION)) {
+        $TERRAFORM_17_LINK="https://releases.hashicorp.com/terraform/${TERRAFORM_17_VERSION}/terraform_${TERRAFORM_17_VERSION}_linux_amd64.zip"
+
+        downloadFile "Terraform 1.7" $TERRAFORM_17_VERSION $TERRAFORM_17_LINK
+    } else {
+        Write-Output "Skipping Terraform 1.7"
+    }
+
+    ## Terraform Provider AWS
+    if ($global:$TERRAFORM_PROVIDER_AWS_VERSION -eq $null -and ![string]::IsNullOrEmpty($TERRAFORM_PROVIDER_AWS_VERSION)) {
+        $TERRAFORM_PROVIDER_AWS_LINK="https://github.com/hashicorp/terraform-provider-aws/archive/refs/tags/v${TERRAFORM_PROVIDER_AWS_VERSION}.zip"
+
+        # downloadFile "Terraform Provider AWS" $TERRAFORM_PROVIDER_AWS_VERSION $TERRAFORM_PROVIDER_AWS_LINK
+        downloadAndRenameFile "Terraform Provider AWS" $TERRAFORM_PROVIDER_AWS_VERSION $TERRAFORM_PROVIDER_AWS_LINK "terraform-provider-aws_${TERRAFORM_PROVIDER_AWS_VERSION}_linux_amd64.zip"
+    } else {
+        Write-Output "Skipping Terraform Provider AWS"
+    }
+
+    ## Openshift Install
+    if ($global:$OPENSHIFT_INSTALL_VERSION -eq $null -and ![string]::IsNullOrEmpty($OPENSHIFT_INSTALL_VERSION)) {
+        $OPENSHIFT_INSTALL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux-${OPENSHIFT_INSTALL_VERSION}.tar.gz"
+
+        downloadFile "Openshift Installer" $OPENSHIFT_INSTALL_VERSION $OPENSHIFT_INSTALL_LINK
+    } else {
+        Write-Output "Skipping Openshift Installer"
+    }
+
+    ## Openshift Client
+    if ($global:$OPENSHIFT_CLIENT_VERSION -eq $null -and ![string]::IsNullOrEmpty($OPENSHIFT_CLIENT_VERSION)) {
+        $OPENSHIFT_CLIENT_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux-${OPENSHIFT_CLIENT_VERSION}.tar.gz"
+
+        downloadFile "Openshift Client" $OPENSHIFT_CLIENT_VERSION $OPENSHIFT_CLIENT_LINK
+    } else {
+        Write-Output "Skipping Openshift Clientr"
+    }
+    
+    ## Cloud Credential Operator
+    if ($global:$CCOCTL_VERSION -eq $null -and ![string]::IsNullOrEmpty($CCOCTL_VERSION)) {
+        $CCOCTL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/ccoctl-linux-${CCOCTL_LINK}.tar.gz"
+
+        downloadFile "Cloud Credential Operator (CCOCTL)" $CCOCTL_VERSION $CCOCTL_LINK
+    } else {
+        Write-Output "Skipping Cloud Credential Operator (CCOCTL)"
+    }
+
+    ## Roxctl
+    if ($global:$ROXCTL_VERSION -eq $null -and ![string]::IsNullOrEmpty($ROXCTL_VERSION)) {
+        $ROXCTL_LINK="https://mirror.openshift.com/pub/rhacs/assets/${ROXCTL_VERSION}/bin/Linux/roxctl"
+
+        downloadFile "Roxctl" $ROXCTL_VERSION $ROXCTL_LINK
+    } else {
+        Write-Output "Skipping Roxctl"
+    }
+
+    ## Go
+    if ($global:$GO_VERSION -eq $null -and ![string]::IsNullOrEmpty($GO_VERSION)) {
+        $GO_LINK="https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+
+        downloadFile "Go" $GO_VERSION $GO_LINK
+    } else {
+        Write-Output "Skipping Go"
+    }
+
+    ## Kubernetes Core
+    if ($global:$KUBERNETES_CORE_VERSION -eq $null -and ![string]::IsNullOrEmpty($KUBERNETES_CORE_VERSION)) {
+        $KUBERNETES_CORE_LINK="https://galaxy.ansible.com/api/v3/plugin/ansible/content/published/collections/artifacts/kubernetes-core-${KUBERNETES_CORE_VERSION}.tar.gz"
+
+        downloadFile "Kubernetes Core" $KUBERNETES_CORE_VERSION $KUBERNETES_CORE_LINK
+    } else {
+        Write-Output "Skipping Kubernetes Core"
+    }
+
+}
+
+function COLLAB_TOOLS {param()
+    Write-Output "Downloading Collab Tools"
+    if (-Not (Test-Path -Path $COLLAB_DOWNLOAD_DIR)) {
+        New-Item -ItemType Directory -Path $COLLAB_DOWNLOAD_DIR
+    }
+
+    ## Rocketchat
+    if ($global:$ROCKETCHAT_VERSION -eq $null -and ![string]::IsNullOrEmpty($ROCKETCHAT_VERSION)) {
+        $ROCKETCHAT_LINK="rocketchat/rocket.chat:${ROCKETCHAT_VERSION}"
+
+        $VERSION=$ROCKETCHAT_VERSION -replace '_', '.'
+        craneFile "Rocketchat" $ROCKETCHAT_VERSION $ROCKETCHAT_LINK "rocketchat_$VERSION.tar"
+    } else {
+        Write-Output "Skipping Rocketchat"
+    }
+    
+    ## Mongosh
+    if ($global:$MONGOSH_VERSION -eq $null -and ![string]::IsNullOrEmpty($MONGOSH_VERSION)) {
+        $MONGOSH_LINK="https://downloads.mongodb.com/compass/mongosh-${MONGOSH_VERSION}-linux-x64.tgz"
+
+        downloadFile "Mongosh" $MONGOSH_VERSION $MONGOSH_LINK
+    } else {
+        Write-Output "Skipping Mongosh"
+    }
+
+    ## MongoDB
+    if ($global:$MONGODB_VERSION -eq $null -and ![string]::IsNullOrEmpty($MONGODB_VERSION)) {
+        $MONGODB_LINK="https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel80-${MONGODB_VERSION}.tgz"
+
+        downloadFile "MongoDB" $MONGODB_VERSION $MONGODB_LINK
+    } else {
+        Write-Output "Skipping MongoDB"
+    }
+
+    ## Jira
+    if ($global:$JIRA_VERSION -eq $null -and ![string]::IsNullOrEmpty($JIRA_VERSION)) {
+        $JIRA_LINK="https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-${JIRA_VERSION}.tar.gz"
+
+        downloadFile "Jira" $JIRA_VERSION $JIRA_LINK
+    } else {
+        Write-Output "Skipping Jira"
+    }
+
+    ## Confluence
+    if ($global:$CONFLUENCE_VERSION -eq $null -and ![string]::IsNullOrEmpty($CONFLUENCE_VERSION)) {
+        $CONFLUENCE_LINK="https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-${CONFLUENCE_VERSION}.tar.gz"
+
+        downloadFile "Confluence" $CONFLUENCE_VERSION $CONFLUENCE_LINK
+    } else {
+        Write-Output "Skipping Confluence"
+    }
 }
 
 ################### HASH #######################
@@ -555,6 +732,10 @@ function HASHER {param()
     }
 }
 
+##
+## Set download path
+$DOWNLOAD_DIR=".\latest"
+##
 
 # Remove contents in .\latest dir
 wipeLatest
@@ -565,4 +746,14 @@ RUNNER_IMAGES
 # Generate sha256 file
 HASHER
 # Zip .\latest to .\latest.zip
-zipFolder
+zipFolder -dir $DOWNLOAD_DIR -zip $DOWNLOAD_ZIP
+
+##
+## Set download path - will refactor code
+$DOWNLOAD_DIR=$COLLAB_DOWNLOAD_DIR
+##
+
+# Download Collab
+COLLAB_TOOLS
+# Zip .\latest\collab to .\collab.zip
+zipFolder -dir $COLLAB_DOWNLOAD_DIR -zip $COLLAB_DOWNLOAD_ZIP

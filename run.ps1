@@ -55,10 +55,11 @@
     MONGODB             | mongodb-linux-x86_64-rhel80-<VERSION>.tgz
     JIRA                | atlassian-jira-software-<VERSION>.tar.gz
     CONFLUENCE          | atlassian-confluence-software-<VERSION>.tar.gz
+    CHROME              |
     __________________________________________________________________________
 
 .NOTES
-	Last updated on 10 Jul 2024
+	Last updated on 13 Aug 2024
 #>
 
 ################### VERSIONS ###################
@@ -111,6 +112,7 @@ $CCOCTL_VERSION="4.16.2"
 $ROXCTL_VERSION="4.4.4"
 $GO_VERSION="1.22.5"
 $KUBERNETES_CORE_VERSION="5.0.0"
+$CHROME_VERSION="127.0.6533.99"
 ############### For Collab Tools ###############
 $ROCKETCHAT_VERSION="6.9.3"
 $MONGOSH_VERSION="2.2.11"
@@ -649,6 +651,37 @@ function RUNNER_IMAGES {param()
         downloadFile "Kubernetes Core" $KUBERNETES_CORE_VERSION $KUBERNETES_CORE_LINK
     } else {
         Write-Output "Skipping Kubernetes Core"
+    }
+
+    ## Chrome
+    if ($global:CHROME_VERSION -eq $null -and ![string]::IsNullOrEmpty($CHROME_VERSION)) {
+        $CHROME_LINK="https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chrome-linux64.zip"
+        $CHROMEDRIVER_LINK="https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chromedriver-linux64.zip"
+        downloadFile "Chrome" $CHROME_VERSION $CHROME_LINK
+        downloadFile "Chrome Driver" $CHROME_VERSION $CHROMEDRIVER_LINK
+    
+        # Extract Chrome and Chrome Driver
+        $chromeZip = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chrome-linux64.zip"
+        $chromedriverZip = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chromedriver-linux64.zip"
+    
+        Expand-Archive -Path $chromeZip -DestinationPath $DOWNLOAD_DIR
+        Expand-Archive -Path $chromedriverZip -DestinationPath $DOWNLOAD_DIR
+    
+        # Create tar.gz archives
+        $chromeTar = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chrome-linux64.tar.gz"
+        $chromedriverTar = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chromedriver-linux64.tar.gz"
+    
+        tar -cvf $chromeTar -C $DOWNLOAD_DIR "chrome-linux64"
+        tar -cvf $chromedriverTar -C $DOWNLOAD_DIR "chromedriver-linux64"
+    
+        # Clean up extracted folders and zip files
+        Remove-Item -Path $chromeZip -Force
+        Remove-Item -Path $chromedriverZip -Force
+        Remove-Item -Path "$DOWNLOAD_DIR/chrome-linux64" -Recurse -Force
+        Remove-Item -Path "$DOWNLOAD_DIR/chromedriver-linux64" -Recurse -Force
+
+    } else {
+        Write-Output "Skipping Chrome"
     }
 
 }

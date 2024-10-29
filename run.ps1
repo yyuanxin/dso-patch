@@ -23,15 +23,16 @@
     UBI 8               | ubi8_<VERSION>.tar
     UBI 8 MINIMAL       | ubi8-minimal_<VERSION>.tar
     AWS_CLI             | awscli-exe-linux-x86_64-<VERSION>.zip
-    CORRETO 11          | amazon-correto-<VERSION>-linux-x64.tar.gz 
-    CORRETO 17          | amazon-correto-<VERSION>-linux-x64.tar.gz 
+    CORRETO 11          | amazon-correto-<VERSION>-linux-x64.tar.gz
+    CORRETO 17          | amazon-correto-<VERSION>-linux-x64.tar.gz
     DEPENDENCY CHECK    | dependency-check-<VERSION>-release.zip
-    MAVEN               | apache-maven-<VERSION>-bin.tar.gz 
-    NODEJS 14           | node-v<VERSION>-linux-x64.tar.gz 
-    NODEJS 18           | node-v<VERSION>-linux-x64.tar.gz 
-    NODEJS 20           | node-v<VERSION>-linux-x64.tar.gz 
-    PYTHON 39           | Python-<VERSION>.tgz 
+    MAVEN               | apache-maven-<VERSION>-bin.tar.gz
+    NODEJS 14           | node-v<VERSION>-linux-x64.tar.gz
+    NODEJS 18           | node-v<VERSION>-linux-x64.tar.gz
+    NODEJS 20           | node-v<VERSION>-linux-x64.tar.gz
+    PYTHON 39           | Python-<VERSION>.tgz
     PYTHON 310          | Python-<VERSION>.tgz
+    PYTHON 311          | Python-<VERSION>.tgz
     SONARQUBE           | sonarqube-<VERSION>.zip
     SONAR SCANNER CLI   | sonar-scanner-cli-<VERSION>-linux.zip
     OPENSCAP            | scap-security-guide-<VERSION>.zip
@@ -59,7 +60,7 @@
     __________________________________________________________________________
 
 .NOTES
-	Last updated on 13 Aug 2024
+	Last updated on 29 Oct 2024
 #>
 
 ################### VERSIONS ###################
@@ -86,6 +87,7 @@
 # $AWS_CLI_VERSION="2.15.30" 
 # $PYTHON_39_VERSION="3.9.19"
 # $PYTHON_310_VERSION="3.10.14"
+# $PYTHON_311_VERSION="3.11.9"
 # $CORRETO_11_VERSION="11.0.22.7.1"
 # $CORRETO_17_VERSION="17.0.10.7.1"
 # $DEPENDENCY_CHECK_VERSION="9.0.10"
@@ -414,6 +416,15 @@ function RUNNER_IMAGES {param()
         downloadFile "Python 3.10" $PYTHON_310_VERSION $PYTHON_310_LINK
     } else {
         Write-Output "Skipping Python 3.10"
+    }
+
+    ## Python 3.11
+    if ($global:PYTHON_311_VERSION -eq $null -and ![string]::IsNullOrEmpty($PYTHON_311_VERSION)) {
+        $PYTHON_311_LINK="https://www.python.org/ftp/python/${PYTHON_311_VERSION}/Python-${PYTHON_311_VERSION}.tgz"
+
+        downloadFile "Python 3.11" $PYTHON_311_VERSION $PYTHON_311_LINK
+    } else {
+        Write-Output "Skipping Python 3.11"
     }
 
     ## Correto 11

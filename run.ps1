@@ -31,6 +31,7 @@
     NODEJS 14           | node-v<VERSION>-linux-x64.tar.gz
     NODEJS 18           | node-v<VERSION>-linux-x64.tar.gz
     NODEJS 20           | node-v<VERSION>-linux-x64.tar.gz
+    NODEJS 22           | node-v<VERSION>-linux-x64.tar.gz
     PYTHON 39           | Python-<VERSION>.tgz
     PYTHON 310          | Python-<VERSION>.tgz
     PYTHON 311          | Python-<VERSION>.tgz
@@ -96,6 +97,7 @@
 # $MAVEN_VERSION="3.9.6"
 # $NODE_18_VERSION="18.18.2"
 # $NODE_20_VERSION="20.10.0"
+# $NODE_22_VERSION="22.10.0"
 # $SONARQUBE_VERSION_9="9.9.3.79811"
 # $SONAR_SCANNER_CLI_VERSION="5.0.1.3006"
 # $OPENSCAP_VERSION="0.1.71"
@@ -500,6 +502,15 @@ function RUNNER_IMAGES {param()
         downloadFile "NodeJS 20" $NODE_20_VERSION $NODE_20_LINK
     } else {
         Write-Output "Skipping NodeJS 20"
+    }
+
+    ## NodeJS 22
+    if ($global:NODE_22_VERSION -eq $null -and ![string]::IsNullOrEmpty($NODE_22_VERSION)) {
+        $NODE_22_LINK="https://nodejs.org/dist/v${NODE_22_VERSION}/node-v${NODE_22_VERSION}-linux-x64.tar.gz"
+
+        downloadFile "NodeJS 22" $NODE_22_VERSION $NODE_22_LINK
+    } else {
+        Write-Output "Skipping NodeJS 22"
     }
 
     ## Sonarqube8

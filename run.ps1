@@ -23,8 +23,9 @@
     UBI 8               | ubi8_<VERSION>.tar
     UBI 8 MINIMAL       | ubi8-minimal_<VERSION>.tar
     AWS_CLI             | awscli-exe-linux-x86_64-<VERSION>.zip
-    CORRETO 11          | amazon-correto-<VERSION>-linux-x64.tar.gz
-    CORRETO 17          | amazon-correto-<VERSION>-linux-x64.tar.gz
+    CORRETTO 11          | amazon-corretto-<VERSION>-linux-x64.tar.gz
+    CORRETTO 17          | amazon-corretto-<VERSION>-linux-x64.tar.gz
+    CORRETTO 21          | amazon-corretto-<VERSION>-linux-x64.tar.gz
     DEPENDENCY CHECK    | dependency-check-<VERSION>-release.zip
     MAVEN               | apache-maven-<VERSION>-bin.tar.gz
     NODEJS 14           | node-v<VERSION>-linux-x64.tar.gz
@@ -88,8 +89,9 @@
 # $PYTHON_39_VERSION="3.9.19"
 # $PYTHON_310_VERSION="3.10.14"
 # $PYTHON_311_VERSION="3.11.9"
-# $CORRETO_11_VERSION="11.0.22.7.1"
-# $CORRETO_17_VERSION="17.0.10.7.1"
+# $CORRETTO_11_VERSION="11.0.22.7.1"
+# $CORRETTO_17_VERSION="17.0.10.7.1"
+# $CORRETTO_21_VERSION="21.0.5.11.1"
 # $DEPENDENCY_CHECK_VERSION="9.0.10"
 # $MAVEN_VERSION="3.9.6"
 # $NODE_18_VERSION="18.18.2"
@@ -427,22 +429,31 @@ function RUNNER_IMAGES {param()
         Write-Output "Skipping Python 3.11"
     }
 
-    ## Correto 11
-    if ($global:CORRETO_11_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETO_11_VERSION)) {
-        $CORRETO_11_LINK="https://corretto.aws/downloads/resources/${CORRETO_11_VERSION}/amazon-corretto-${CORRETO_11_VERSION}-linux-x64.tar.gz"
+    ## Corretto 11
+    if ($global:CORRETTO_11_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETTO_11_VERSION)) {
+        $CORRETTO_11_LINK="https://corretto.aws/downloads/resources/${CORRETTO_11_VERSION}/amazon-corretto-${CORRETTO_11_VERSION}-linux-x64.tar.gz"
         
-        downloadFile "Correto 11" $CORRETO_11_VERSION $CORRETO_11_LINK
+        downloadFile "Corretto 11" $CORRETTO_11_VERSION $CORRETTO_11_LINK
     } else {
-        Write-Output "Skipping Correto 11"
+        Write-Output "Skipping Corretto 11"
     }
 
-    ## Correto 17
-    if ($global:CORRETO_17_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETO_17_VERSION)) {
-        $CORRETO_17_LINK="https://corretto.aws/downloads/resources/${CORRETO_17_VERSION}/amazon-corretto-${CORRETO_17_VERSION}-linux-x64.tar.gz"
+    ## Corretto 17
+    if ($global:CORRETTO_17_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETTO_17_VERSION)) {
+        $CORRETTO_17_LINK="https://corretto.aws/downloads/resources/${CORRETTO_17_VERSION}/amazon-corretto-${CORRETTO_17_VERSION}-linux-x64.tar.gz"
         
-        downloadFile "Correto 17" $CORRETO_17_VERSION $CORRETO_17_LINK
+        downloadFile "Corretto 17" $CORRETTO_17_VERSION $CORRETTO_17_LINK
     } else {
-        Write-Output "Skipping Correto 17"
+        Write-Output "Skipping Corretto 17"
+    }
+
+    ## Corretto 21
+    if ($global:CORRETTO_21_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETTO_21_VERSION)) {
+        $CORRETTO_21_LINK="https://corretto.aws/downloads/resources/${CORRETTO_21_VERSION}/amazon-corretto-${CORRETTO_21_VERSION}-linux-x64.tar.gz"
+
+        downloadFile "Corretto 21" $CORRETTO_21_VERSION $CORRETTO_21_LINK
+    } else {
+        Write-Output "Skipping Corretto 21"
     }
 
     ## Dependency Check

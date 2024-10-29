@@ -23,9 +23,9 @@
     UBI 8               | ubi8_<VERSION>.tar
     UBI 8 MINIMAL       | ubi8-minimal_<VERSION>.tar
     AWS_CLI             | awscli-exe-linux-x86_64-<VERSION>.zip
-    CORRETTO 11          | amazon-corretto-<VERSION>-linux-x64.tar.gz
-    CORRETTO 17          | amazon-corretto-<VERSION>-linux-x64.tar.gz
-    CORRETTO 21          | amazon-corretto-<VERSION>-linux-x64.tar.gz
+    CORRETTO 11         | amazon-corretto-<VERSION>-linux-x64.tar.gz
+    CORRETTO 17         | amazon-corretto-<VERSION>-linux-x64.tar.gz
+    CORRETTO 21         | amazon-corretto-<VERSION>-linux-x64.tar.gz
     DEPENDENCY CHECK    | dependency-check-<VERSION>-release.zip
     MAVEN               | apache-maven-<VERSION>-bin.tar.gz
     NODEJS 14           | node-v<VERSION>-linux-x64.tar.gz

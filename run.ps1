@@ -23,14 +23,14 @@
     UBI 8               | ubi8_<VERSION>.tar
     UBI 8 MINIMAL       | ubi8-minimal_<VERSION>.tar
     AWS_CLI             | awscli-exe-linux-x86_64-<VERSION>.zip
-    CORRETO 11          | amazon-correto-<VERSION>-linux-x64.tar.gz 
-    CORRETO 17          | amazon-correto-<VERSION>-linux-x64.tar.gz 
+    CORRETO 11          | amazon-correto-<VERSION>-linux-x64.tar.gz
+    CORRETO 17          | amazon-correto-<VERSION>-linux-x64.tar.gz
     DEPENDENCY CHECK    | dependency-check-<VERSION>-release.zip
-    MAVEN               | apache-maven-<VERSION>-bin.tar.gz 
-    NODEJS 14           | node-v<VERSION>-linux-x64.tar.gz 
-    NODEJS 18           | node-v<VERSION>-linux-x64.tar.gz 
-    NODEJS 20           | node-v<VERSION>-linux-x64.tar.gz 
-    PYTHON 39           | Python-<VERSION>.tgz 
+    MAVEN               | apache-maven-<VERSION>-bin.tar.gz
+    NODEJS 14           | node-v<VERSION>-linux-x64.tar.gz
+    NODEJS 18           | node-v<VERSION>-linux-x64.tar.gz
+    NODEJS 20           | node-v<VERSION>-linux-x64.tar.gz
+    PYTHON 39           | Python-<VERSION>.tgz
     PYTHON 310          | Python-<VERSION>.tgz
     PYTHON 311          | Python-<VERSION>.tgz
     SONARQUBE           | sonarqube-<VERSION>.zip

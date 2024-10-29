@@ -25,6 +25,7 @@
     AWS_CLI             | awscli-exe-linux-x86_64-<VERSION>.zip
     CORRETO 11          | amazon-correto-<VERSION>-linux-x64.tar.gz
     CORRETO 17          | amazon-correto-<VERSION>-linux-x64.tar.gz
+    CORRETO 21          | amazon-correto-<VERSION>-linux-x64.tar.gz
     DEPENDENCY CHECK    | dependency-check-<VERSION>-release.zip
     MAVEN               | apache-maven-<VERSION>-bin.tar.gz
     NODEJS 14           | node-v<VERSION>-linux-x64.tar.gz
@@ -90,6 +91,7 @@
 # $PYTHON_311_VERSION="3.11.9"
 # $CORRETO_11_VERSION="11.0.22.7.1"
 # $CORRETO_17_VERSION="17.0.10.7.1"
+# $CORRETO_21_VERSION="21.0.5.11.1"
 # $DEPENDENCY_CHECK_VERSION="9.0.10"
 # $MAVEN_VERSION="3.9.6"
 # $NODE_18_VERSION="18.18.2"
@@ -443,6 +445,15 @@ function RUNNER_IMAGES {param()
         downloadFile "Correto 17" $CORRETO_17_VERSION $CORRETO_17_LINK
     } else {
         Write-Output "Skipping Correto 17"
+    }
+
+    ## Correto 21
+    if ($global:CORRETO_21_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETO_21_VERSION)) {
+        $CORRETO_21_LINK="https://corretto.aws/downloads/resources/${CORRETO_21_VERSION}/amazon-corretto-${CORRETO_21_VERSION}-linux-x64.tar.gz"
+
+        downloadFile "Correto 21" $CORRETO_21_VERSION $CORRETO_21_LINK
+    } else {
+        Write-Output "Skipping Correto 21"
     }
 
     ## Dependency Check

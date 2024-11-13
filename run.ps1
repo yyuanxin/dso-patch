@@ -621,7 +621,7 @@ function RUNNER_IMAGES {param()
 
     ## Openshift Install
     if ($global:OPENSHIFT_INSTALL_VERSION -eq $null -and ![string]::IsNullOrEmpty($OPENSHIFT_INSTALL_VERSION)) {
-        $OPENSHIFT_INSTALL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux-${OPENSHIFT_INSTALL_VERSION}.tar.gz"
+        $OPENSHIFT_INSTALL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OPENSHIFT_INSTALL_VERSION}/openshift-install-linux-${OPENSHIFT_INSTALL_VERSION}.tar.gz"
 
         downloadFile "Openshift Installer" $OPENSHIFT_INSTALL_VERSION $OPENSHIFT_INSTALL_LINK
     } else {
@@ -630,16 +630,16 @@ function RUNNER_IMAGES {param()
 
     ## Openshift Client
     if ($global:OPENSHIFT_CLIENT_VERSION -eq $null -and ![string]::IsNullOrEmpty($OPENSHIFT_CLIENT_VERSION)) {
-        $OPENSHIFT_CLIENT_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux-${OPENSHIFT_CLIENT_VERSION}.tar.gz"
+        $OPENSHIFT_CLIENT_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OPENSHIFT_CLIENT_VERSION}/openshift-client-linux-${OPENSHIFT_CLIENT_VERSION}.tar.gz"
 
         downloadFile "Openshift Client" $OPENSHIFT_CLIENT_VERSION $OPENSHIFT_CLIENT_LINK
     } else {
-        Write-Output "Skipping Openshift Clientr"
+        Write-Output "Skipping Openshift Client"
     }
 
     ## Cloud Credential Operator
     if ($global:CCOCTL_VERSION -eq $null -and ![string]::IsNullOrEmpty($CCOCTL_VERSION)) {
-        $CCOCTL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/ccoctl-linux-${CCOCTL_VERSION}.tar.gz"
+        $CCOCTL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${CCOCTL_VERSION}/ccoctl-linux-${CCOCTL_VERSION}.tar.gz"
 
         downloadFile "Cloud Credential Operator (CCOCTL)" $CCOCTL_VERSION $CCOCTL_LINK
     } else {

@@ -108,21 +108,21 @@
 # $NODE_14_VERSION="14.21.3"
 # $SONARQUBE_VERSION_8="8.9.10.61524"
 # $LOMBOK_VERSION="1.18.30"
-$TFLINT_VERSION="0.52.0"
-$TERRAFORM_VERSION="1.9.8"
-$OPENSHIFT_INSTALL_VERSION="4.16.2"
-$OPENSHIFT_CLIENT_VERSION="4.16.2"
-$CCOCTL_VERSION="4.16.2"
-$ROXCTL_VERSION="4.4.4"
-$GO_VERSION="1.22.5"
-$KUBERNETES_CORE_VERSION="5.0.0"
-$CHROME_VERSION="127.0.6533.99"
+# $TFLINT_VERSION="0.52.0"
+# $TERRAFORM_VERSION="1.9.8"
+# $OPENSHIFT_INSTALL_VERSION="4.16.2"
+# $OPENSHIFT_CLIENT_VERSION="4.16.2"
+# $CCOCTL_VERSION="4.16.2"
+# $ROXCTL_VERSION="4.4.4"
+# $GO_VERSION="1.22.5"
+# $KUBERNETES_CORE_VERSION="5.0.0"
+# $CHROME_VERSION="127.0.6533.99"
 ############### For Collab Tools ###############
-$ROCKETCHAT_VERSION="6.9.3"
-$MONGOSH_VERSION="2.2.11"
-$MONGODB_VERSION="6.0.16"
-$JIRA_VERSION="9.12.11"
-$CONFLUENCE_VERSION="8.5.12"
+# $ROCKETCHAT_VERSION="6.9.3"
+# $MONGOSH_VERSION="2.2.11"
+# $MONGODB_VERSION="6.0.16"
+# $JIRA_VERSION="9.12.11"
+# $CONFLUENCE_VERSION="8.5.12"
 ################################################
 # HELPER FUNCTIONS                             #
 ################################################
@@ -689,8 +689,8 @@ function RUNNER_IMAGES {param()
         Expand-Archive -Path $chromedriverZip -DestinationPath $DOWNLOAD_DIR
 
         # Create tar.gz archives
-        $chromeTar = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chrome-linux64.tar.gz"
-        $chromedriverTar = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chromedriver-linux64.tar.gz"
+        $chromeTar = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chrome-linux64-${CHROME_VERSION}.tar.gz"
+        $chromedriverTar = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chromedriver-linux64-${CHROME_VERSION}.tar.gz"
 
         tar -cvf $chromeTar -C $DOWNLOAD_DIR "chrome-linux64"
         tar -cvf $chromedriverTar -C $DOWNLOAD_DIR "chromedriver-linux64"

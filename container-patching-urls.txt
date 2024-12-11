@@ -151,3 +151,16 @@ nodejs
 (Look for the sonarqube supported Node.js version linux-x64.tar.gz)
 (search for "node.js 14" and "node.js 18")
 https://nodejs.org/en/download/releases/
+
+Burpsuite Pro
+=============
+Burpsuite Pro
+https://portswigger.net/burp/releases#professional
+
+Auth Analyzer
+https://portswigger.net/bappstore
+
+NMAP
+https://nmap.org/download.html#windows
+
+

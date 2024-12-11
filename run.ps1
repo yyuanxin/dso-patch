@@ -521,7 +521,7 @@ function RUNNER_IMAGES {param()
     if ($global:COSIGN_VERSION -eq $null -and ![string]::IsNullOrEmpty($COSIGN_VERSION)) {
         $COSIGN_LINK="https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
 
-        downloadFile "Cosign" $COSIGN_VERSION $COSIGN_LINK
+        downloadAndRenameFile "Cosign" $COSIGN_VERSION $COSIGN_LINK cosign-linux-amd64-${COSIGN_VERSION}
     } else {
         Write-Output "Skipping Cosign"
     }

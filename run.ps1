@@ -57,11 +57,12 @@
     MONGODB             | mongodb-linux-x86_64-rhel80-<VERSION>.tgz
     JIRA                | atlassian-jira-software-<VERSION>.tar.gz
     CONFLUENCE          | atlassian-confluence-software-<VERSION>.tar.gz
+    BURPSUITE PRO	| burpsuite_pro_windows-x64_v<VERSION>.exe
     CHROME              |
     __________________________________________________________________________
 
 .NOTES
-	Last updated on 13 Nov 2024
+	Last updated on 12 Dec 2024
 #>
 
 . .\variables.ps1
@@ -188,14 +189,12 @@ function writeTextFile {
 
 function DSO_TOOLS {param()
     Write-Output "Downloading DSO Tools"
-    ## Burpsuite
-    if ($global:BURP_VERSION -eq $null -and ![string]::IsNullOrEmpty($BURP_VERSION)) {
-        $BURP_LINK_PREFIX="https://portswigger.net/burp/releases/download?product=enterprise&"
-        $BURP_SERVER_LINK="${BURP_LINK_PREFIX}${BURP_VERSION}&type=updater"
-        $BURP_AGENT_LINK="${BURP_LINK_PREFIX}${BURP_VERSION}&type=agentupdate&component=1"
+    ## Burpsuite PRO
+    if ($global:BURP_PRO_VERSION -eq $null -and ![string]::IsNullOrEmpty($BURP_PRO_VERSION)) {
+        $BURP_PRO_LINK_PREFIX="https://portswigger.net/burp/releases/startdownload?product=community"
+        $BURP_PRO_LINK="${BURP_PRO_LINK_PREFIX}&version=${BURP_PRO_VERSION}&type=windowsx64"
 
-        downloadFile "Burpsuite Server" $BURP_VERSION $BURP_SERVER_LINK
-        downloadFile "Burpsuite Agent" $BURP_VERSION $BURP_AGENT_LINK
+        downloadFile "Burpsuite Pro" $BURP_PRO_VERSION $BURP_PRO_LINK
     } else {
         Write-Output "Skipping Burpsuite"
     }

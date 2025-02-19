@@ -191,7 +191,7 @@ function DSO_TOOLS {param()
     Write-Output "Downloading DSO Tools"
     ## Burpsuite PRO
     if ($global:BURP_PRO_VERSION -eq $null -and ![string]::IsNullOrEmpty($BURP_PRO_VERSION)) {
-        $BURP_PRO_LINK_PREFIX="https://portswigger.net/burp/releases/startdownload?product=community"
+        $BURP_PRO_LINK_PREFIX="https://portswigger.net/burp/releases/startdownload?product=pro"
         $BURP_PRO_LINK="${BURP_PRO_LINK_PREFIX}&version=${BURP_PRO_VERSION}&type=windowsx64"
 
         downloadFile "Burpsuite Pro" $BURP_PRO_VERSION $BURP_PRO_LINK

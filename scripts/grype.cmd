@@ -1,38 +1,20 @@
 @echo off
 echo =====Start download for grype=======
 
-curl --ssl-no-revoke https://toolbox-data.anchore.io/grype/databases/listing.json -o %GRYPE_DIR%\listing.json
+rem for old db v5; to be removed after db v6 process and app v0.88.0 & above implemented
+call scripts\grype_v5.cmd
 
-powershell -Command "(gc %GRYPE_DIR%\listing.json) -replace '}, {', \"}`n {\" -replace '], ', \"]`n \" | Out-File -encoding ASCII %GRYPE_DIR%\listing_modified.json"
+curl --ssl-no-revoke https://grype.anchore.io/databases/v6/latest.json -o %GRYPE_DIR%\latest.json
 
-set grype_pattern="vulnerability-db_v5_*"
+set grype_pattern="vulnerability-db_v6*"
 
-for /F "tokens=1,2,3,* delims=," %%a in ('FINDSTR /r /c:%grype_pattern% %GRYPE_DIR%\listing_modified.json') do (
+for /F "tokens=* USEBACKQ" %%F in (`findstr path %GRYPE_DIR%\latest.json`) do ( set var=%%F )
+set "zst_file=%var:~9,-3%"
+set "zst_path=https://grype.anchore.io/databases/v6/%zst_file%"
 
-  setlocal enabledelayedexpansion
+echo Grype db package path is %zst_path%
+set "modified_file=%zst_file::=_%"
+echo Get package and rename file to %modified_file%
+curl --ssl-no-revoke -L %zst_path% -o %GRYPE_DIR%\%modified_file%
 
-  for /F "tokens=2" %%A in ("%%c") do (
-    set url=%%A
-
-    for %%1 in ("!url:/= !") do (
-      set original_filename=%%1
-    )
-    set original_filename=!original_filename:"=!
-    set output_filename=!original_filename::=_!
-
-    for /F "tokens=1,2 delims==" %%1 in ("!original_filename!=!output_filename!") do (
-      set url=!url:%%1=%%2!
-    )
-
-    curl --ssl-no-revoke -L %%A -o %GRYPE_DIR%\!output_filename!
-  )
-  
-  echo {"available":{%%a,%%b,"url": !url!,%%d]}} > %GRYPE_DIR%\listing.json
-
-  endlocal
-  
-  goto :completed
-)
-
-:completed
 echo =====Complete download for grype=======

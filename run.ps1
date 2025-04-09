@@ -335,6 +335,15 @@ function RUNNER_IMAGES {param()
         Write-Output "Skipping Ubi9 Micro"
     }
 
+    ## GITLAB SECRETS
+    if ($global:GITLAB_SECRETS_VERSION -eq $null -and ![string]::IsNullOrEmpty($GITLAB_SECRETS_VERSION)) {
+        $GITLAB_SECRETS_LINK="registry.gitlab.com/security-products/secrets:${GITLAB_SECRETS_VERSION}-fips"
+
+        craneFile "GITLAB_SECRETS" $GITLAB_SECRETS_VERSION $GITLAB_SECRETS_LINK "gitlab-secrets_v$GITLAB_SECRETS_VERSION.tar"
+    } else {
+        Write-Output "Skipping GitLab Secrets"
+    }
+
     ## AWS CLI
     if ($global:AWS_CLI_VERSION -eq $null -and ![string]::IsNullOrEmpty($AWS_CLI_VERSION)) {
         $AWS_CLI_LINK="https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip"

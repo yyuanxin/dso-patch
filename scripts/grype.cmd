@@ -1,8 +1,8 @@
 @echo off
 echo =====Start download for grype=======
 
-rem for old db v5; to be removed after db v6 process and app v0.88.0 & above implemented
-call scripts\grype_v5.cmd
+rem for old db v5; removed after db v6 process and app v0.88.0 & above implemented
+rem call scripts\grype_v5.cmd
 
 curl --ssl-no-revoke https://grype.anchore.io/databases/v6/latest.json -o %GRYPE_DIR%\latest.json
 

@@ -35,6 +35,7 @@
     PYTHON 39           | Python-<VERSION>.tgz
     PYTHON 310          | Python-<VERSION>.tgz
     PYTHON 311          | Python-<VERSION>.tgz
+    PYTHON 312          | Python-<VERSION>.tgz
     SONARQUBE           | sonarqube-<VERSION>.zip
     SONAR SCANNER CLI   | sonar-scanner-cli-<VERSION>-linux.zip
     OPENSCAP            | scap-security-guide-<VERSION>.zip
@@ -378,6 +379,15 @@ function RUNNER_IMAGES {param()
         downloadFile "Python 3.11" $PYTHON_311_VERSION $PYTHON_311_LINK
     } else {
         Write-Output "Skipping Python 3.11"
+    }
+
+    ## Python 3.12
+    if ($global:PYTHON_312_VERSION -eq $null -and ![string]::IsNullOrEmpty($PYTHON_312_VERSION)) {
+        $PYTHON_312_LINK="https://www.python.org/ftp/python/${PYTHON_312_VERSION}/Python-${PYTHON_312_VERSION}.tgz"
+
+        downloadFile "Python 3.12" $PYTHON_312_VERSION $PYTHON_312_LINK
+    } else {
+        Write-Output "Skipping Python 3.12"
     }
 
     ## Corretto 11

@@ -390,6 +390,15 @@ function RUNNER_IMAGES {param()
         Write-Output "Skipping Python 3.12"
     }
 
+    ## Python 3.13
+    if ($global:PYTHON_313_VERSION -eq $null -and ![string]::IsNullOrEmpty($PYTHON_313_VERSION)) {
+        $PYTHON_313_LINK="https://www.python.org/ftp/python/${PYTHON_313_VERSION}/Python-${PYTHON_313_VERSION}.tgz"
+
+        downloadFile "Python 3.13" $PYTHON_313_VERSION $PYTHON_313_LINK
+    } else {
+        Write-Output "Skipping Python 3.13"
+    }
+
     ## Corretto 11
     if ($global:CORRETTO_11_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETTO_11_VERSION)) {
         $CORRETTO_11_LINK="https://corretto.aws/downloads/resources/${CORRETTO_11_VERSION}/amazon-corretto-${CORRETTO_11_VERSION}-linux-x64.tar.gz"

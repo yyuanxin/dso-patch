@@ -36,6 +36,7 @@
     PYTHON 310          | Python-<VERSION>.tgz
     PYTHON 311          | Python-<VERSION>.tgz
     PYTHON 312          | Python-<VERSION>.tgz
+    PYTHON 313          | Python-<VERSION>.tgz
     SONARQUBE           | sonarqube-<VERSION>.zip
     SONAR SCANNER CLI   | sonar-scanner-cli-<VERSION>-linux.zip
     OPENSCAP            | scap-security-guide-<VERSION>.zip
@@ -497,6 +498,15 @@ function RUNNER_IMAGES {param()
         downloadFile "Sonarqube" $SONARQUBE_VERSION_9 $SONARQUBE_9_LINK
     } else {
         Write-Output "Skipping Sonarqube9"
+    }
+
+    ## Sonarqube
+    if ($global:SONARQUBE_VERSION -eq $null -and ![string]::IsNullOrEmpty($SONARQUBE_VERSION)) {
+        $SONARQUBE_LINK="https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${SONARQUBE_VERSION}.zip"
+
+        downloadFile "Sonarqube" $SONARQUBE_VERSION $SONARQUBE_LINK
+    } else {
+        Write-Output "Skipping Sonarqube"
     }
 
     ## Sonar Scanner CLI

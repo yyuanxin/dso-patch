@@ -44,7 +44,7 @@
     GRYPE               | grype_<VERSION>_linux_amd64.tar.gz
     TRIVY               | trivy_<VERSION>_Linux-64bit.tar.gz
     COSIGN              | cosign-linux-amd64
-    HADOLINT            | hadolint-v<VERSION>.tar.gz
+    HADOLINT            | hadolint-v<VERSION>-linux-x86_64
     LOMBOK              | lombok-<VERSION>.jar
     TFLINT              | tflint-<VERSION>-linux-amd64.zip
     TERRAFORM           | terraform_<VERSION>_linux_amd64.zip
@@ -565,9 +565,9 @@ function RUNNER_IMAGES {param()
 
     ## Hadolint
     if ($global:HADOLINT_VERSION -eq $null -and ![string]::IsNullOrEmpty($HADOLINT_VERSION)) {
-        $HADOLINT_LINK="https://github.com/hadolint/hadolint/archive/refs/tags/v${HADOLINT_VERSION}.tar.gz"
+        $HADOLINT_LINK="https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-linux-x86_64"
 
-        downloadFile "Hadolint" $HADOLINT_VERSION $HADOLINT_LINK
+        downloadAndRenameFile "Hadolint" $HADOLINT_VERSION $HADOLINT_LINK hadolint-v${HADOLINT_VERSION}-linux-x86_64
     } else {
         Write-Output "Skipping Hadolint"
     }

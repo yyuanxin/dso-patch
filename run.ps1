@@ -429,7 +429,7 @@ function RUNNER_IMAGES {param()
 
     ## Dependency Check
     if ($global:DEPENDENCY_CHECK_VERSION -eq $null -and ![string]::IsNullOrEmpty($DEPENDENCY_CHECK_VERSION)) {
-        $DEPENDENCY_CHECK_LINK="https://github.com/jeremylong/DependencyCheck/releases/download/v${DEPENDENCY_CHECK_VERSION}/dependency-check-${DEPENDENCY_CHECK_VERSION}-release.zip"
+        $DEPENDENCY_CHECK_LINK="https://github.com/dependency-check/DependencyCheck/releases/download/v${DEPENDENCY_CHECK_VERSION}/dependency-check-${DEPENDENCY_CHECK_VERSION}-release.zip"
 
         downloadFile "Dependency Check" $DEPENDENCY_CHECK_VERSION $DEPENDENCY_CHECK_LINK
     } else {

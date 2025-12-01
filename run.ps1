@@ -23,6 +23,7 @@
     UBI 8               | ubi8_<VERSION>.tar
     UBI 8 MINIMAL       | ubi8-minimal_<VERSION>.tar
     AWS_CLI             | awscli-exe-linux-x86_64-<VERSION>.zip
+    CORRETTO 8          | amazon-corretto-<VERSION>-linux-x64.tar.gz
     CORRETTO 11         | amazon-corretto-<VERSION>-linux-x64.tar.gz
     CORRETTO 17         | amazon-corretto-<VERSION>-linux-x64.tar.gz
     CORRETTO 21         | amazon-corretto-<VERSION>-linux-x64.tar.gz
@@ -400,6 +401,15 @@ function RUNNER_IMAGES {param()
         Write-Output "Skipping Python 3.13"
     }
 
+    ## Corretto 8
+    if ($global:CORRETTO_8_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETTO_8_VERSION)) {
+        $CORRETTO_8_LINK="https://corretto.aws/downloads/resources/${CORRETTO_8_VERSION}/amazon-corretto-${CORRETTO_8_VERSION}-linux-x64.tar.gz"
+
+        downloadFile "Corretto 8" $CORRETTO_8_VERSION $CORRETTO_8_LINK
+    } else {
+        Write-Output "Skipping Corretto 8"
+    }
+    
     ## Corretto 11
     if ($global:CORRETTO_11_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETTO_11_VERSION)) {
         $CORRETTO_11_LINK="https://corretto.aws/downloads/resources/${CORRETTO_11_VERSION}/amazon-corretto-${CORRETTO_11_VERSION}-linux-x64.tar.gz"
